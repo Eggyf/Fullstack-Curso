@@ -3,6 +3,7 @@ import Filtering from "./components/Filtering";
 import PersonForm from "./components/PersonForm";
 import Persons from "./components/Persons";
 import axios from "axios";
+import PersonsService from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -12,10 +13,7 @@ const App = () => {
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("Ready");
-      setPersons(response.data);
-    });
+    PersonsService.getAll().then((response) => setPersons(response.data));
   }, []);
   console.log("render", persons.length, "persons");
 
@@ -33,17 +31,39 @@ const App = () => {
   };
   const addPerson = (event) => {
     event.preventDefault();
+    const index = persons.findIndex((item) => item.name == newName);
+
     if (persons.findIndex((item) => item.name == newName) == -1) {
       const newperson = {
         name: newName,
         number: newNumber,
-        id: persons.length + 1,
+        id: `${persons.length + 1}`,
       };
-      setPersons(persons.concat(newperson));
-      setNewName("");
-      setNewNumber("");
+      PersonsService.create(newperson).then((response) => {
+        setPersons(persons.concat(response.data));
+        setNewName("");
+        setNewNumber("");
+      });
     } else {
-      alert(`${newName} already added to phonebook`);
+      const id = persons[index].id;
+      const person = persons.find((n) => n.id == id);
+      const changedPerson = { ...person, number: newNumber };
+      if (
+        confirm(
+          `${newName} already added to phonebook, replace the old number with the new one?`
+        )
+      ) {
+        PersonsService.update(id, changedPerson).then((returnedPerson) => {
+          console.log(returnedPerson);
+          setPersons(
+            persons.map((person) =>
+              person.id == id ? returnedPerson.data : person
+            )
+          );
+          setNewName("");
+          setNewNumber("");
+        });
+      }
     }
   };
 
@@ -65,9 +85,15 @@ const App = () => {
         handleNameChange={handleNameChange}
         newNumber={newNumber}
         handleNumberChange={handleNumberChange}
+        persons={persons}
+        setPersons={setPersons}
       />
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons
+        personsToShow={personsToShow}
+        setPersons={setPersons}
+        persons={persons}
+      />
     </div>
   );
 };
