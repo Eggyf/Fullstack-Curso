@@ -4,12 +4,17 @@ const Statistics = (props) => {
         return (
             <>
                 <h2>Statistics</h2>
-                <StatisticLine text={'good'} stat={props.good}/>
-                <StatisticLine text={'neutral'} stat={props.neutral} />
-                <StatisticLine text={'bad'} stat={props.bad} />
-                <StatisticLine text={'all'} stat={props.all} />
-                <StatisticLine text={'average'} stat={props.avg} />
-                <StatisticLine text={'positive'} stat={props.positive}/>
+
+                <table>
+                    <tbody>
+                        <StatisticLine text={'good'} stat={props.good}/>
+                        <StatisticLine text={'neutral'} stat={props.neutral} />
+                        <StatisticLine text={'bad'} stat={props.bad} />
+                        <StatisticLine text={'all'} stat={props.all} />
+                        <StatisticLine text={'average'} stat={props.avg} />
+                        <StatisticLine text={'positive'} stat={props.positive}/>
+                    </tbody>
+                </table>
             </>
         )
     }
