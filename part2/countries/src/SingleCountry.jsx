@@ -5,6 +5,7 @@ const SingleCountry = ({ country }) => {
   const [weather, setWeather] = useState(null);
   const Api_key = import.meta.env.VITE_API_KEY;
   console.log(Api_key);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios
@@ -18,6 +19,8 @@ const SingleCountry = ({ country }) => {
     };
     fetchData();
   }, []);
+
+  
   return (
     <>
       <h1>{country.name.common}</h1>
