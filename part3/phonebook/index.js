@@ -48,6 +48,7 @@ app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
 app.use(cors());
+app.use(express.static("dist"));
 const generateId = () => {
   const maxId =
     persons.length > 0 ? Math.max(...persons.map((n) => Number(n.id))) : 0;
