@@ -41,7 +41,6 @@ const App = () => {
       const newperson = {
         name: newName,
         number: newNumber,
-        id: `${persons.length + 1}`,
       };
       PersonsService.create(newperson)
         .then((response) => {

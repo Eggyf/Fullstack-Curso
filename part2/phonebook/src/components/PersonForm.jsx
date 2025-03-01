@@ -9,8 +9,8 @@ const PersonForm = ({
   persons,
   setPersons,
 }) => {
-  const handleUpdate = (name) => {
-    
+  const handleUpdate = (name, number) => {
+    console.log(persons);
   };
   return (
     <>
@@ -22,8 +22,11 @@ const PersonForm = ({
           number: <input value={newNumber} onChange={handleNumberChange} />
         </div>
         <div>
-          <button type="submit" onClick={() => handleUpdate(newName)}>
-            add
+          <button
+            type="submit"
+            onClick={() => handleUpdate(newName, newNumber)}
+          >
+            Add
           </button>
         </div>
       </form>
