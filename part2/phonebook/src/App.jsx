@@ -53,8 +53,7 @@ const App = () => {
           setNewNumber("");
         })
         .catch((error) => {
-          console.log(error.message);
-          setErrorMessage(error.message);
+          setErrorMessage(error.response.data.error);
           setTimeout(() => {
             setErrorMessage(null);
           }, 5000);
@@ -80,9 +79,8 @@ const App = () => {
             setNewNumber("");
           })
           .catch((error) => {
-            setErrorMessage(
-              `Information of '${newName}' has already been removed from server`
-            );
+            console.log("object", error.message);
+            setErrorMessage(error.response.data.error);
             setTimeout(() => {
               setErrorMessage(null);
             }, 5000);
