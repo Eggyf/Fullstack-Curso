@@ -110,6 +110,64 @@ beforeEach(async () => {
     });
   });
 
+
+  describe('DELETE /api/blogs/:id', () => {
+    test('deleting a blog post returns 204', async () => {
+      const newBlog = {
+        title: 'New Blog Post',
+        author: 'Author Name',
+        url: 'https://example.com',
+        likes: 5
+      };
+  
+      const createdBlog = await Blog.create(newBlog);
+        await api
+        .delete(`/api/blogs/${createdBlog.id}`)
+        .expect(204);
+  
+      const remainingBlogs = await Blog.find({});
+      assert.strictEqual(remainingBlogs.length,1);
+    });
+  
+    test('deleting a non-existent blog post returns 404', async () => {
+      const response = await api
+        .delete('/api/blogs/1234567890abcdef12345678')
+        .expect(404);
+  
+      assert.deepStrictEqual(response.body.error,'Blog post not found');
+    });
+  });
+
+
+  describe('PUT /api/blogs/:id', () => {
+    test('updating likes of a blog post returns updated blog', async () => {
+      const newBlog = {
+        title: 'New Blog Post',
+        author: 'Author Name',
+        url: 'https://example.com',
+        likes: 7
+      };
+  
+      const createdBlog = await Blog.create(newBlog);
+      const updateData = { likes: createdBlog.likes + 1 };
+  
+      const response = await api
+        .put(`/api/blogs/${createdBlog.id}`)
+        .send(updateData)
+        .expect(200);
+  
+      assert.strictEqual(response.body.likes,createdBlog.likes + 1);
+    });
+  
+    test('updating a non-existent blog post returns 404', async () => {
+      const response = await api
+        .put('/api/blogs/1234567890abcdef12345678')
+        .send({ likes: 10 })
+        .expect(404);
+  
+      assert.strictEqual(response.body.error,'Blog post not found');
+    });
+  });
   
 
 

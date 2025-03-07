@@ -35,24 +35,35 @@ blogRouter.post('/',  async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-blogRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndDelete(request.params.id)
-  response.status(204).end()
-})
+blogRouter.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await Blog.findByIdAndDelete(id);
+    if (!result) {
+      return res.status(404).json({ error: 'Blog post not found' });
+    }
+    res.status(204).end(); // No contenido (204 No Content)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error deleting blog post' });
+  }
+});
 
-blogRouter.put('/:id', async (request, response) => {
-  const body = request.body
 
-  const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
+blogRouter.put('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedBlog) {
+      return res.status(404).json({ error: 'Blog post not found' });
+    }
+    res.json(updatedBlog);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error updating blog post' });
+  }
+});
 
-  })
 
-  const updatedBlog =  await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-  response.json(updatedBlog)
-})
 
 module.exports = blogRouter
