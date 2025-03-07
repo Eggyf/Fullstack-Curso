@@ -13,7 +13,3 @@ module.exports = {
   PORT
 }
 
-module.exports = {
-  MONGODB_URI,
-  PORT
-}
